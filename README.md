@@ -20,15 +20,15 @@
 
 2. 线性结构:数据元素之间存在一对一的关系
 
-   ![](./pic\线性结构.png)
+   ![](./pic/线性结构.png)
 
 3. 树形结构:数据元素之间存在一对多的层次关系
 
-   ![](./pic\树.png)
+   ![](./pic/树.png)
 
 4. 图形结构:数据元素之间存在多对多的关系
 
-   ![](./pic\图形结构.png)
+   ![](./pic/图形结构.png)
 
 #### 1.2.1 物理结构
 
@@ -36,11 +36,11 @@
 
 1. 顺序存储:数据元素存储在地址连续的存储单元里,其数据间的物理关系和逻辑关系是一致的.例如:【数组】的存储
 
-   ![](./pic\顺序存储结构.png)
+   ![](./pic/顺序存储结构.png)
 
 2. 链式存储:数据结构存储在任意的存储单元里,这组存储单元可以连续,也可以不连续,数据单元中还存放着指针,指向其关联元素的位置.由于数据之前的关系经常发生变化,所以链式结构这种存储结构更加灵活.
 
-   ![](./pic\链式存储结构.png)
+   ![](./pic/链式存储结构.png)
 
 ## 2 算法概述
 
@@ -112,17 +112,17 @@
 
 * 举例
 
-  ![](./pic\大O1.png)算法复杂度:O(1)
+  ![](./pic/大O1.png)算法复杂度:O(1)
 
 ---
 
-![](./pic\大O2.png)
+![](./pic/大O2.png)
 
 ​	算法复杂度:O(n)
 
 ------
 
-![](./pic\大O3.png)
+![](./pic/大O3.png)
 
 ​	算法复杂度:O(n²)
 
@@ -130,11 +130,11 @@
 
 * 常见时间复杂度举例
 
-![](./pic\常见时间复杂度.png)
+![](./pic/常见时间复杂度.png)
 
 效率
 
-![](./pic\常见时间复杂度执行效率.png)
+![](./pic/常见时间复杂度执行效率.png)
 
 ## 3. 线性结构
 
@@ -210,7 +210,7 @@ Q: 快速查找未知长度单链表的中间节点
 
 ### 3.5 常见链表
 
-![](./pic\链表.jpg)
+![](./pic/链表.jpg)
 
 ### 3.5 循环链表
 
@@ -444,7 +444,7 @@ public void deleteByValue(long value) {
 
 ### 2.3.1 冒泡排序
 
-![](C:\Users\fudingcheng\Desktop\讲课视频\数据结构和算法\pic\冒泡排序.gif)
+![](./pic\冒泡排序.gif)
 
 ```java
 public void bubbleSort(long[] arr) {
@@ -465,7 +465,7 @@ public void bubbleSort(long[] arr) {
 
 ### 2.3.2 选择排序
 
-![](C:\Users\fudingcheng\Desktop\讲课视频\数据结构和算法\pic\选择排序.gif)
+![](./pic\选择排序.gif)
 
 ```java
 public void selectionSort(long[] arr) {
@@ -493,7 +493,7 @@ public void selectionSort(long[] arr) {
 
 ### 2.3.4 插入排序
 
-![](C:\Users\fudingcheng\Desktop\讲课视频\数据结构和算法\pic\插入排序.gif)
+![](./pic\插入排序.gif)
 
 ```java
 public void insertSort(long[] arr) {
@@ -702,7 +702,7 @@ public boolean isFull() {
 
 # 5. 单链表
 
-![](C:\Users\fudingcheng\Desktop\数据结构和算法\pic\单链表.jpg)
+![](./pic/单链表.jpg)
 
 ## 5.1 初始化
 
@@ -815,9 +815,9 @@ public Node delete(long value) {
 
 # 6. 双端链表
 
-![](C:\Users\fudingcheng\Desktop\数据结构和算法\pic\双端链表.jpg)
+![](./pic/双端链表.jpg)
 
-![](C:\Users\fudingcheng\Desktop\数据结构和算法\pic\双端链表2.jpg)
+![](./pic/双端链表2.jpg)
 
 ## 6.1 初始化
 
@@ -943,7 +943,7 @@ public boolean isEmpty() {
 
 # 7. 双向链表
 
-![](.\pic\双向链表.png)
+![](./pic/双向链表.png)
 
 ## 7.1 初始化
 
