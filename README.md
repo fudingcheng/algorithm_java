@@ -258,7 +258,7 @@ public static void main(String[] args) {
 
 # 2. 数组
 
-![](C:\Users\fudingcheng\Desktop\数据结构和算法\pic\数组.png)
+![](./pic/数组.png)
 
 ## 2.1 初始化
 
@@ -444,7 +444,7 @@ public void deleteByValue(long value) {
 
 ### 2.3.1 冒泡排序
 
-![](./pic\冒泡排序.gif)
+![](./pic/冒泡排序.gif)
 
 ```java
 public void bubbleSort(long[] arr) {
@@ -465,7 +465,7 @@ public void bubbleSort(long[] arr) {
 
 ### 2.3.2 选择排序
 
-![](./pic\选择排序.gif)
+![](./pic/选择排序.gif)
 
 ```java
 public void selectionSort(long[] arr) {
@@ -493,7 +493,7 @@ public void selectionSort(long[] arr) {
 
 ### 2.3.4 插入排序
 
-![](./pic\插入排序.gif)
+![](./pic/插入排序.gif)
 
 ```java
 public void insertSort(long[] arr) {
@@ -512,7 +512,7 @@ public void insertSort(long[] arr) {
 
 # 3. 栈
 
-![](.\pic\栈.png)
+![](./pic/栈.png)
 
 ## 3.1 初始化
 
@@ -583,7 +583,7 @@ public boolean isFull(){
 
 # 4. 队列
 
-![](.\pic\队列.png)
+![](./pic/队列.png)
 
 ## 4.1 初始化
 
