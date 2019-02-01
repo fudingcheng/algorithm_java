@@ -1499,7 +1499,104 @@ public void afterOrder(Node localNode) {
 ![](pic/删除双支节点.gif)
 
 ```java
+/**
+ * 删除节点
+ *
+ * @param value
+ */
+public boolean delete(long value) {
+    //引用当前节点,从根节点开始
+    Node current = root;
+    //应用当前节点的父节点
+    Node parent = root;
+    //当前是否为左节点标记
+    boolean isLeftChild = true;
+    //查找节点
+    while (current.data != value) {
+        parent = current;
+        if (current.data > value) {
+            current = current.leftChild;
+        } else {
+            current = current.rightChild;
+            isLeftChild = false;
+        }
 
+        if (current == null) {
+            return false;
+        }
+    }
+    //如果是叶子节点
+    if (current.leftChild == null && current.rightChild == null) {
+        if (current == root) {
+            root = null;
+        } else if (isLeftChild) {
+            parent.leftChild = null;
+        } else {
+            parent.rightChild = null;
+        }
+    } else if (current.rightChild == null) {    //单支节点,左节点为空
+        if (current == root) {
+            root = root.leftChild;
+        } else if (isLeftChild) {
+            parent.leftChild = current.leftChild;
+        } else {
+            parent.rightChild = current.rightChild;
+        }
+
+    } else if (current.leftChild == null) {     //单支节点,左节点为空
+        if (current == root) {
+            root = root.rightChild;
+        } else if (isLeftChild) {
+            parent.leftChild = current.leftChild;
+        } else {
+            parent.rightChild = current.rightChild;
+        }
+    } else {  //如果是双支节点
+        //1.查找后继节点
+        //2.删除后继结点
+        //3.让后继结点的父节点称为其右子树的父节点
+        //4.让后继节点替代待删除的节点
+        Node successor = getSuccessor(current);
+        if(current == root) {
+            root = successor;
+        } else if(isLeftChild) {
+            parent.leftChild = successor;
+        } else{
+            parent.rightChild = successor;
+        }
+        successor.leftChild = current.leftChild;
+    }
+    return true;
+}
+
+/**
+ * 查找后继节点
+ *
+ * @param delNode
+ * @return
+ */
+private Node getSuccessor(Node delNode) {
+    //引用后继节点
+    Node successor = delNode;
+    //应用后继节点父节点
+    Node successorParent = delNode;
+    //引用当前节点
+    Node current = delNode.rightChild;
+
+    //走向左子树,查找后继节点
+    while (current!=null){
+        successorParent = successor;
+        successor = current;
+        current = current.leftChild;
+    }
+
+    //判断是否找到
+    if(successor!=delNode.rightChild){
+        successorParent.leftChild = successor.rightChild;
+        successor.rightChild = delNode.rightChild;
+    }
+    return successor;
+}
 ```
 
 ## 9.2 红黑树

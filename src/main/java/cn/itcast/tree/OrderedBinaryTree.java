@@ -190,11 +190,10 @@ public class OrderedBinaryTree {
             }
         } else {  //如果是双支节点
             //1.查找后继节点
-            Node successor = getSuccessor(current);
             //2.删除后继结点
             //3.让后继结点的父节点称为其右子树的父节点
             //4.让后继节点替代待删除的节点
-
+            Node successor = getSuccessor(current);
             if(current == root) {
                 root = successor;
             } else if(isLeftChild) {
