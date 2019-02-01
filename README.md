@@ -510,6 +510,92 @@ public void insertSort(long[] arr) {
 }
 ```
 
+### 2.3.5 希尔排序
+
+相比插入排序,希尔排序在移动元素的次数更少
+
+![](./pic/希尔排序.gif)
+
+
+
+```java
+public void shellSort(long[] arr) {
+    //初始化一个间隔
+    int h = 1;
+    while (h < arr.length / 3) {
+        h = h * 3 + 1;
+    }
+    while (h > 0) {
+        long temp = 0;
+        for (int i = h; i < arr.length; i++) {
+            temp = arr[i];
+            int j = i;
+            while (j > h - 1 && arr[j - h] >= temp) {
+                arr[j] = arr[j - h];
+                j -= h;
+            }
+            arr[j] = temp;
+        }
+        h = (h - 1) / 3;
+    }
+}
+```
+
+### 2.3.6 快速排序
+
+![](pic/快速排序.gif)
+
+```java
+/**
+ * 划分数组
+ */
+public int partition(long[] arr, int left, int right, long point) {
+    int leftPtr = left - 1;
+    int rightPtr = right;
+
+    while (true) {
+        while (leftPtr < rightPtr && arr[++leftPtr] < point) ;
+        while (rightPtr > leftPtr && arr[--rightPtr] > point) ;
+
+        if (leftPtr >= rightPtr) {
+            break;
+        } else {
+            long temp = arr[leftPtr];
+            arr[leftPtr] = arr[rightPtr];
+            arr[rightPtr] = temp;
+        }
+    }
+    long temp = arr[leftPtr];
+    arr[leftPtr] = arr[right];
+    arr[right] = temp;
+    return leftPtr;
+}
+
+ /**
+  * 快速排序
+  *
+  * @param arr
+  * @param left
+  * @param right
+  */
+ public void quickSort(long[] arr, int left, int right) {
+     if (right - left <= 0) {
+         return;
+     } else {
+         //设置比较关键字
+         long point = arr[right];
+         //获得切入点,同时对数组进行划分
+         int partition = partition(arr, left, right, point);
+         //对左边的子数组进行快速排序
+         quickSort(arr, left, partition - 1);
+         //对右边的子数组进行快速排序
+         quickSort(arr, partition + 1, right);
+     }
+ }
+```
+
+
+
 # 3. 栈
 
 ![](./pic/栈.png)
@@ -1090,4 +1176,331 @@ public boolean isEmpty() {
     return first == null;
 }
 ```
+
+# 8. 递归
+
+## 8.1 三角数列
+
+规则:第n项的值=n-1项的值+n
+
+>  项数:  1,2,3,4,5,6
+>
+>  值:      1,3,6,10,15,21
+
+### 8.1.1 非递归实现
+
+```java
+public int getNumber(int n) {
+    int total = 0;
+    while (n > 0) {
+        total = total + n;
+        n--;
+    }
+    return total;
+}
+```
+
+### 8.1.2 递归实现
+
+```java
+public int getNumberByRecursion(int n) {
+    if (n == 1) {
+        return 1;
+    } else {
+        return n + getNumberByRecursion(n - 1);
+    }
+}
+```
+
+## 8.2 斐波那契数列
+
+规则:第1项为0,第2项为1,第3项为1...第n项为(n-1)+(n-2)
+
+>  项数:  1,2,3,4,5,6
+>
+>  值:      0,1,1,2,3,5
+
+```java
+public int getNumber(int n) {
+    if (n == 1) {
+        return 0;
+    } else if (n == 2) {
+        return 1;
+    } else {
+        return getNumber(n - 1) + getNumber(n - 2);
+    }
+}
+```
+
+## 8.3 汉诺塔
+
+![](./pic/汉诺塔-3.gif)
+
+![](./pic/汉诺塔-4.gif)
+
+思路分析:
+
+ 	1. 将TopN-1个盘子从A移动到B
+ 	2. 将TopN的盘子从A移动到C
+ 	3. 将TopN-1个盘子从B移动到C
+
+```java
+public void doTower(int topN, char from, char inter, char to) {
+    if (topN == 1) {
+        System.out.println("盘子1,从" + from + "塔座到" + to + "塔座");
+    } else {
+        //1.将topN-1的盘子从from移动到inter
+        doTower(topN - 1, from, to, inter);
+        //2.将topN的盘子从from移动到to
+        System.out.println("盘子" + topN + ",从" + from + "塔座到" + to + "塔座");
+        //3.将topN-1的盘子从inter移动到to
+        doTower(topN - 1, inter, from, to);
+    }
+}
+```
+
+[汉诺塔在线游戏](http://www.4399.com/flash/676_1.htm)
+
+# 9. 树
+
+概念:树一种抽象数据类型,用来模拟具有树状结构性质的数据集合.
+
+1. 每个节点有零个或多个子节点
+2. 没有父节点的称为根节点
+3. 每个非跟节点有且只有一个父节点
+4. 除了根节点外,每个子节点可以分为多个不相交的子树
+
+![](pic/树型数据结构.png)
+
+## 9.1 二叉树(**有序二叉树**)
+
+概念:每个节点最多只有2个子节点,分别为左子节点和右子节点
+
+特点:
+
+1. 左子树上的所有节点的值均小于根节点的值
+2. 右子书上的所有节点的值均大于根节点的值
+3. 任意节点的左,右子树也分别为二叉树
+4. 没有键值相等的节点
+
+![](pic/二叉树.png)
+
+
+
+### 9.1.1 初始化
+
+#### 9.1.1.1 节点
+
+```java
+public class Node {
+    /**
+     * 数据项
+     */
+    public long data;
+
+    /**
+     * 数据项
+     */
+    public String sDate;
+
+    /**
+     * 左节点
+     */
+    public Node leftChild;
+    /**
+     * 右节点
+     */
+    public Node rightChild;
+
+    /**
+     * 构造方法
+     *
+     * @param data
+     * @param sDate
+     */
+    public Node(long data, String sDate) {
+        this.data = data;
+        this.sDate = sDate;
+    }
+}
+```
+
+#### 9.1.1.2 二叉树
+
+```java
+public class OrderedBinaryTree {
+
+    /**
+     * 根节点
+     */
+    private Node root;
+}
+```
+
+### 9.1.2 基本操作
+
+#### 9.1.2.1 插入节点
+
+```java
+public void insert(long value, String sValue) {
+    //封装节点
+    Node newNode = new Node(value, sValue);
+    //引用当前节点
+    Node current = root;
+    //应用父节点
+    Node parent;
+    //如果root为null,第一次插入的时候
+    if (root == null) {
+        root = newNode;
+        return;
+    } else {    //非第一次插入
+        //遍历树
+        while (true) {
+            //父节点指向当前节点
+            parent = current;
+            if (current.data > value) {
+                //如果当前指向的节点数据比插入的数据大,则走向左子树
+                current = current.leftChild;
+                if (current == null) {
+                    parent.leftChild = newNode;
+                    return;
+                }
+            } else {
+                //如果当前指向的节点的数据比插入数据小,则走向右子树
+                current = current.rightChild;
+                if (current == null) {
+                    parent.rightChild = newNode;
+                    return;
+                }
+            }
+        }
+    }
+}
+```
+
+#### 9.1.2.2 查找节点
+
+```java
+public Node find(long value) {
+    //应用当前节点,从根节点开始
+    Node current = root;
+    //循环,只要查找值不等于当前节点的数据项就一致查找
+    while (current.data != value) {
+        //进行比较,如果当前节点的值大于查找值,则走向左子树
+        if (current.data > value) {
+            current = current.leftChild;
+        } else {    //如果当前节点的值小于查找值,则走向右子树
+            current = current.rightChild;
+        }
+        //如果查不到,返回null
+        if (current == null) {
+            return null;
+        }
+    }
+    return current;
+}
+```
+
+#### 9.1.2.3 遍历节点
+
+* 前序遍历
+
+![](pic/前序遍历.gif)
+
+```java
+/**
+ * 前序遍历:
+ * (1)访问根节点
+ * (2)先序遍历左子树
+ * (3)先序遍历右子树
+ *
+ * @param localNode
+ */
+public void frontOrder(Node localNode) {
+    if (localNode != null) {
+        //访问根节点
+        System.out.println(localNode.data + "," + localNode.sData);
+        //前序遍历左子树
+        frontOrder(localNode.leftChild);
+        //前序遍历右子树
+        frontOrder(localNode.rightChild);
+    }
+}
+```
+
+* 中序遍历
+
+![](pic/中序遍历.gif)
+
+```java
+/**
+ * 中序遍历
+ * (1)中序遍历左子树
+ * (2)访问根节点
+ * (3)中序遍历右子树
+ *
+ * @param localNode
+ */
+public void inOrder(Node localNode) {
+    if (localNode != null) {
+        //中序遍历左子树
+        inOrder(localNode.leftChild);
+        //访问根节点
+        System.out.println(localNode.data + "," + localNode.sData);
+        //中序遍历右子树
+        inOrder(localNode.rightChild);
+    }
+}
+```
+
+* 后续遍历
+
+![](pic/后序遍历.gif)
+
+```java
+/**
+ * 后续遍历
+ * (1)后序遍历左子树
+ * (2)后序遍历右子树
+ * (3)访问根节点
+ *
+ * @param localNode
+ */
+public void afterOrder(Node localNode) {
+    if (localNode != null) {
+        //后续遍历左子树
+        afterOrder(localNode.leftChild);
+        //后续遍历右子树
+        afterOrder(localNode.rightChild);
+        //访问根节点
+        System.out.println(localNode.data + "," + localNode.sData);
+    }
+}
+```
+
+#### 9.1.2.3 删除节点
+
+* 删除叶子节点:直接删除该节点，再修改其父节点的指针（注意分是根节点和不是根节点）
+
+  eg:删除72
+
+![](pic/删除叶子节点.gif)
+
+* 删除单支节点:让p的子树与p的父亲节点相连，再删除p即可；（注意分是根节点和不是根节点两种情况）
+
+  eg:删除79
+
+![](pic/删除单支节点.gif)
+
+* 删除双支节点:首先找到p的后继y，因为y一定没有左子树，所以可以删除y，并让y的父亲节点成为y的右子树的父亲节点，并用y的值代替p的值
+
+  eg:删除9
+
+![](pic/删除双支节点.gif)
+
+```java
+
+```
+
+## 9.2 红黑树
 
