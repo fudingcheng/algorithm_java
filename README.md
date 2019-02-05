@@ -1601,3 +1601,149 @@ private Node getSuccessor(Node delNode) {
 
 ## 9.2 红黑树
 
+如果节点的值有序,那么有序二叉树就会是如下链表形状
+
+![](pic/二叉树02.png)
+
+如果当值有序依然要建立树形结构的关系,就要使用红黑树,也称自平衡的二叉查找树
+
+![](pic/红黑树02.png)
+
+插入节点的过程
+
+![](pic/红黑树.gif)
+
+[参考链接](https://luodichen.com/blog/tag/%E7%BA%A2%E9%BB%91%E6%A0%91/)
+
+# 10. Hash
+
+根据键（Key）而直接访问在内存存储位置的[数据结构
+
+## 10.1 初始化
+
+* 实体类
+
+```java
+public class Info {
+    private String key;
+    private String name;
+}
+```
+
+* Hash表
+
+```java
+public class HashTable {
+
+    private Info[] arr;
+
+    public HashTable() {
+        arr = new Info[100];
+    }
+
+    public HashTable(int maxSize) {
+        arr = new Info[maxSize];
+    }
+}
+```
+
+## 10.2 基本操作
+
+### 10.2.1 计算key的Hash值
+
+```java
+public int hashCode(String key) {
+    /**
+     * 这种方式进行转换,如果key='abc' || 'acb' || 'cba'
+     * 那么这三个不同的key会计算出相同的hashCode值,造成数据的被覆盖!
+     */
+	// int hashVal = 0;
+	// for (int i = key.length() - 1; i >= 0; i--) {
+	//     int letter = key.charAt(i) - 96;
+	//     hashVal += letter;
+	// }
+	// return hashVal;
+
+    BigInteger hashVal = new BigInteger("0");
+    BigInteger pow27 = new BigInteger("1");
+    for (int i = key.length() - 1; i >= 0; i--) {
+        int letter = key.charAt(i) - 96;
+        BigInteger letterB = new BigInteger(String.valueOf(letter));
+        hashVal = hashVal.add(letterB.multiply(pow27));
+        pow27 = pow27.multiply(new BigInteger(String.valueOf(27)));
+    }
+    return hashVal.mod(new BigInteger((String.valueOf(arr.length)))).intValue();
+}
+```
+
+### 10.2.2 插入数据
+
+```java
+public void insert(Info info) {
+    arr[hashCode(info.getKey())] = info;
+}
+```
+
+### 10.2.3 查找数据
+
+```java
+public Info find(String key) {
+    return arr[hashCode(key)];
+}
+```
+
+## 10.3 解决冲突
+
+### 10.3.1 开放地址发
+
+当添加数据发生冲突时,寻找一个空位,并将数据插入.
+
+* 添加元素
+
+```java
+public void insert(Info info) {
+    //获得关键字的Hash值
+    int hashCode = hashCode(info.getKey());
+    //如果当前的位置已经占用,并且值不为空
+    while (arr[hashCode] != null && arr[hashCode].getName() != null) {
+        //进行递加
+        ++hashCode;
+        //循环
+        hashCode %= arr.length;
+    }
+    arr[hashCode] = info;
+}
+```
+
+* 查找数据
+
+```java
+public Info find(String key) {
+    int hashCode = hashCode(key);
+    while (arr[hashCode] != null) {
+        if (arr[hashCode].getKey().equals(key)) {
+            return arr[hashCode];
+        }
+        ++hashCode;
+        hashCode %= arr.length;
+    }
+    return null;
+}
+```
+
+* 删除数据
+
+```java
+public Info delete(String key) {
+    int hashCode = hashCode(key);
+    while (arr[hashCode] != null) {
+        if (arr[hashCode].getKey().equals(key)) {
+            Info info = arr[hashCode];
+            info.setName(null);
+            return info;
+        }
+    }
+    return null;
+}
+```
+
