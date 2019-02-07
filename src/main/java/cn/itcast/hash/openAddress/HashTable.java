@@ -1,5 +1,6 @@
-package cn.itcast.hash;
+package cn.itcast.hash.openAddress;
 
+import cn.itcast.hash.Info;
 import org.junit.Test;
 
 import java.math.BigInteger;
@@ -57,6 +58,12 @@ public class HashTable {
         return null;
     }
 
+    /**
+     * 根据key删除元素
+     *
+     * @param key
+     * @return
+     */
     public Info delete(String key) {
         int hashCode = hashCode(key);
         while (arr[hashCode] != null) {
@@ -68,26 +75,6 @@ public class HashTable {
         }
         return null;
     }
-
-    @Test
-    public void test() {
-        HashTable hashTable = new HashTable();
-        Info info1 = new Info("a", "zs");
-        Info info2 = new Info("ct", "lisi");
-        Info info3 = new Info("299", "ww");
-        hashTable.insert(info1);
-        hashTable.insert(info2);
-        hashTable.insert(info3);
-
-        System.out.println(hashTable.find(info1.getKey()).getName());
-        System.out.println(hashTable.find(info2.getKey()).getName());
-        System.out.println(hashTable.find(info3.getKey()).getName());
-
-        System.out.println(hashTable.delete(info3.getKey()));
-
-        System.out.println(hashTable.find(info3.getKey()).getName());
-    }
-
 
     /**
      * 获得key的Hash值
@@ -117,6 +104,4 @@ public class HashTable {
         }
         return hashVal.mod(new BigInteger((String.valueOf(arr.length)))).intValue();
     }
-
-
 }

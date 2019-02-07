@@ -1,4 +1,4 @@
-# 1. 数据结构和算法
+1. 数据结构和算法
 
 数据结构+算法=程序
 
@@ -1615,7 +1615,7 @@ private Node getSuccessor(Node delNode) {
 
 [参考链接](https://luodichen.com/blog/tag/%E7%BA%A2%E9%BB%91%E6%A0%91/)
 
-# 10. Hash
+# 10. 哈希
 
 根据键（Key）而直接访问在内存存储位置的[数据结构
 
@@ -1694,9 +1694,15 @@ public Info find(String key) {
 
 ## 10.3 解决冲突
 
-### 10.3.1 开放地址发
+无论设置的存储区域（n）有多大，当需要存储的数据大于 n 时，那么必然会存在哈希值相同的情况。这就是所谓的散列冲突
+
+![](pic/散列冲突.gif)
+
+### 10.3.1 开放地址法
 
 当添加数据发生冲突时,寻找一个空位,并将数据插入.
+
+![](pic/开放寻址法.gif)
 
 * 添加元素
 
@@ -1715,7 +1721,7 @@ public void insert(Info info) {
 }
 ```
 
-* 查找数据
+* 查找元素
 
 ```java
 public Info find(String key) {
@@ -1731,7 +1737,7 @@ public Info find(String key) {
 }
 ```
 
-* 删除数据
+* 删除元素
 
 ```java
 public Info delete(String key) {
@@ -1744,6 +1750,437 @@ public Info delete(String key) {
         }
     }
     return null;
+}
+```
+
+### 10.3.2 链表法
+
+每个位置对应一条链表，所有散列值相同的元素都放到相同位置对应的链表中
+
+![](pic/链表法.gif)
+
+* 节点
+
+```java
+public class Node {
+    /**
+     * 数据域
+     */
+    public Info info;
+    /**
+     * 指针域
+     */
+    public Node next;
+
+    public Node(Info info) {
+        this.info = info;
+    }
+}
+```
+
+* 链表
+
+```java
+public class LinkList {
+
+    /**
+     * 头结点指针
+     */
+    private Node first;
+
+    public LinkList() {
+        first = null;
+    }
+
+    /**
+     * 在头结点后插入节点
+     *
+     * @param info
+     */
+    public void insertFirst(Info info) {
+        Node node = new Node(info);
+        node.next = first;
+        first = node;
+    }
+
+    /**
+     * 删除节点
+     *
+     * @return
+     */
+    public Node deleteFirst() {
+        Node tmp = first;
+        first = tmp.next;
+        return tmp;
+    }
+
+    /**
+     * 查找方法
+     *
+     * @param key
+     * @return
+     */
+    public Node find(String key) {
+        Node current = first;
+        while (!key.equals(current.info.getKey())) {
+            if (current.next == null) {
+                return null;
+            }
+            current = first.next;
+        }
+        return current;
+    }
+
+    /**
+     * 删除节点
+     *
+     * @param key
+     * @return
+     */
+    public Node delete(String key) {
+        Node current = first;
+        Node previous = first;
+        while (!key.equals(current.info.getKey())) {
+            if (current.next == null) {
+                return null;
+            }
+            previous = current;
+            current = current.next;
+        }
+
+        if (current == first) {
+            first = first.next;
+        } else {
+            previous.next = current.next;
+        }
+        return current;
+
+    }
+
+}
+```
+
+* 初始化HashTable
+
+```java
+public class HashTable {
+
+    public LinkList[] arr;
+
+    public HashTable() {
+        arr = new LinkList[100];
+    }
+
+    public HashTable(int maxSize) {
+        arr = new LinkList[maxSize];
+    }
+}
+```
+
+* 添加元素
+
+```java
+public void insert(Info info) {
+    String key = info.getKey();
+    int hashCode = hashCode(key);
+    if (arr[hashCode] == null) {
+        arr[hashCode] = new LinkList();
+    }
+    arr[hashCode].insertFirst(info);
+}
+```
+
+* 查找元素
+
+```java
+public Info find(String key) {
+    int hashCode = hashCode(key);
+    return arr[hashCode].find(key).info;
+}
+```
+
+* 删除元素
+
+```java
+public Info delete(String key) {
+    int hashCode = hashCode(key);
+    return arr[hashCode].delete(key).info;
+}
+```
+
+# 11. 图
+
+## 11.1 基本概念
+
+![](pic/图.jpg)
+
+**图:**是一种和树想像的数据结构,通常有一个固定的形状.
+
+**临接:**如果两个顶点被同一条边相连,就称这连个顶点是临接的
+
+**路径:**路径是从一个顶点到另一个顶点经过的边的序列
+
+**连通图和非连通图:**至少有一条路径可以连接所有的点,那么这个图就是联通图,否则是非联通图
+
+**有向图:**有向图的边是有方向的.如只能从A到B,不能从B到A
+
+**无向图:**无向图的边是无方向的.可以从A到B,也可以从B到A
+
+**带权图:**在有些图中,边被赋予一个权值,权值是数字.它可以代表两个顶点的物理距离或者是一个顶点到另一个顶点的时间等等.
+
+## 11.2 初始化
+
+* 顶点类
+
+```java
+public class Vertex {
+
+    public char label;
+
+    public boolean isVisited;
+
+    public Vertex(char label) {
+        this.label = label;
+    }
+}
+```
+
+* 图
+
+```java
+public class Graph {
+
+    /**
+     * 顶点数组
+     */
+    private Vertex[] vertexList;
+
+    /**
+     * 临接矩阵
+     */
+    private int[][] adjMat;
+
+    /**
+     * 顶点的最大数量
+     */
+    private int maxSize = 20;
+
+    /**
+     * 当前顶点数量
+     */
+    private int nVertex;
+
+
+    public Graph() {
+        vertexList = new Vertex[maxSize];
+        adjMat = new int[maxSize][maxSize];
+        for (int i = 0; i < maxSize; i++) {
+            for (int j = 0; j < maxSize; j++) {
+                adjMat[i][j] = 0;
+            }
+        }
+        nVertex = 0;
+    }
+
+    /**
+     * 添加顶点
+     *
+     * @param label
+     */
+    public void addVertex(char label) {
+        vertexList[nVertex++] = new Vertex(label);
+    }
+
+    /**
+     * 添加边
+     *
+     * @param start
+     * @param end
+     */
+    public void addEdge(int start, int end) {
+        adjMat[start][end] = 1;
+        adjMat[end][start] = 1;
+    }
+    
+}
+```
+
+* 创建图
+
+```java
+Graph graph = new Graph();
+graph.addVertex('A');
+graph.addVertex('B');
+graph.addVertex('C');
+//0代表A,1代表B,2代表C
+graph.addEdge(0, 1);	
+graph.addEdge(0, 2);
+graph.addEdge(1, 2);
+```
+
+## 11.3 搜索
+
+### 11.3.1 广度搜索
+
+![](pic/bfs.gif)
+
+#### 11.3.1.1 实现步骤
+
+1. 访问临接的未访问过的顶点,标记该顶点,并放入队列中
+2. 如果不能执行步骤1,就从队列中取出一个顶点
+3. 当不能执行步骤1和2时,就完成了搜索
+
+#### 11.3.1.2 代码实现
+
+* 创建队列
+
+```java
+/**
+ * 队列
+ */
+private MyQueue queue;
+
+
+public Graph() {
+    vertexList = new Vertex[maxSize];
+    adjMat = new int[maxSize][maxSize];
+    for (int i = 0; i < maxSize; i++) {
+        for (int j = 0; j < maxSize; j++) {
+            adjMat[i][j] = 0;
+        }
+    }
+    nVertex = 0;
+    stack = new MyStack();
+    queue = new MyQueue();
+}
+```
+
+* 广度遍历
+
+```java
+public void wfs() {
+    //首先访问0号顶点
+    vertexList[0].isVisited = true;
+    //显示该顶点
+    displayVertex(0);
+    //放入队列中
+    queue.insert(0);
+    //遍历
+    while (!queue.isEmpty()) {
+        int v = getAdjUnVisitedVertex((int) queue.peek());
+        if (v == -1) {
+            queue.remove();
+        } else {
+            vertexList[v].isVisited = true;
+            displayVertex(v);
+            queue.insert(v);
+        }
+    }
+
+    //搜索完毕后,将节点的状态改为已经访问
+    for (int i = 0; i < nVertex; i++) {
+        vertexList[i].isVisited = true;
+    }
+}
+```
+
+
+
+### 11.3.2 深度搜索
+
+![](pic/dfs.gif)
+
+#### 11.3.2.1 实现步骤
+
+1. 访问临接的未访问过的顶点,标记该顶点,并放入栈中
+2. 如果不能执行步骤1,且栈不为空,就从栈中弹出一个顶点
+3. 当不能指定步骤1和步骤2 ,就完成了整个搜索过程
+
+#### 11.3.2.2 代码实现
+
+* 创建栈
+
+```java
+/**
+ * 栈
+ */
+private MyStack stack;
+
+
+public Graph() {
+    vertexList = new Vertex[maxSize];
+    adjMat = new int[maxSize][maxSize];
+    for (int i = 0; i < maxSize; i++) {
+        for (int j = 0; j < maxSize; j++) {
+            adjMat[i][j] = 0;
+        }
+    }
+    nVertex = 0;
+    stack = new MyStack();
+}
+```
+
+* 遍历
+
+```java
+public void dfs() {
+    //首先访问0号顶点
+    vertexList[0].isVisited = true;
+    //显示该顶点
+    displayVertex(0);
+    //压入栈中
+    stack.push(0);
+    //遍历
+    while (!stack.isEmpty()) {
+        //获得一个未访问过的临接点
+        int v = getAdjUnVisitedVertex((int) stack.peek());
+        //如果已经访问过,则弹栈
+        if (v == -1) {
+            stack.pop();
+        } else {   //未访问过,则标记,并压入栈中
+            vertexList[v].isVisited = true;
+            displayVertex(v);
+            stack.push(v);
+        }
+    }
+
+    //搜索完毕后,将节点的状态改为已经访问
+    for (int i = 0; i < nVertex; i++) {
+        vertexList[i].isVisited = true;
+    }
+}
+```
+
+## 11.4 最小生成树
+
+连接每个顶点最少的连线.最小生成树的边数总比顶点数少1.
+
+![](pic/最小生成树1.jpg)
+
+![](pic/最小生成树2.jpg)
+
+```java
+public void mst() {
+    //首先访问0号节点
+    vertexList[0].isVisited = true;
+    //压入栈中
+    stack.push(0);
+    while (!stack.isEmpty()) {
+        int currentVertex = (int) stack.peek();
+        //获得一个未访问过的临接点
+        int v = getAdjUnVisitedVertex(currentVertex);
+        if (v == -1) {
+            //弹出一个顶点
+            stack.pop();
+        } else {
+            vertexList[v].isVisited = true;
+            stack.push(v);
+            displayVertex(currentVertex);
+            System.out.print("-");
+            displayVertex(v);
+            System.out.print(" ");
+        }
+    }
 }
 ```
 
