@@ -473,6 +473,7 @@ public void selectionSort(long[] arr) {
     int k = 0;
     //交换的变量
     long temp = 0;
+    //比较的次数
     for (int i = 0; i < arr.length - 1; i++) {
         //从第一位开始比较
         k = i;
@@ -481,7 +482,7 @@ public void selectionSort(long[] arr) {
             if (arr[j] < arr[k]) {
                 k = j;
             }
-            //经过循环k永远指向最小值
+            //经过循环,k永远指向最小值
         }
         //交换k和i的值
         temp = arr[i];
